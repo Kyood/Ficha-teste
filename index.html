@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ficha de Personagem</title>
+<style>
+:root{--bg:#f7e9e7;--card:#fff6f4;--tx:#2e1414;--mu:#8a5a58;--ac:#a61c1c;--bd:#e6c4c0;--in:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a0b0b;--card:#2a1212;--tx:#f3dcd9;--mu:#b58a86;--ac:#e5534b;--bd:#4a2321;--in:#351616;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1a0b0b;--card:#2a1212;--tx:#f3dcd9;--mu:#b58a86;--ac:#e5534b;--bd:#4a2321;--in:#351616;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 Georgia,"Times New Roman",serif}
+main{max-width:760px;margin:0 auto;padding:12px}
+h1{font-size:20px;margin:8px 0;color:var(--ac);letter-spacing:.5px}
+h2{font-size:14px;text-transform:uppercase;letter-spacing:2px;color:var(--ac);margin:0 0 10px;border-bottom:1px solid var(--bd);padding-bottom:6px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin:12px 0}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+button{font:inherit;background:var(--ac);color:#fff;border:0;border-radius:6px;padding:6px 12px;cursor:pointer}
+button.g{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+label{display:block;font-size:12px;color:var(--mu)}
+input,textarea,select{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px solid var(--bd);border-radius:6px;padding:6px 8px}
+textarea{min-height:64px;resize:vertical}
+.pair{display:flex;gap:4px;align-items:center}
+.pair span{color:var(--mu)}
+.pool{font-size:13px;color:var(--mu);margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pool input{width:70px}
+.pool b{color:var(--tx)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 64px 34px 34px 28px 34px;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dashed var(--bd)}
+.row .n{min-width:0}
+.row .n small{color:var(--mu)}
+.row .v{min-width:26px;text-align:center;font-weight:bold}
+.row button{padding:2px 0;width:100%}
+.row select{width:100%;padding:2px 4px}
+.sp{border:1px solid var(--bd);border-radius:8px;padding:8px;margin-bottom:8px;display:grid;grid-template-columns:minmax(0,1fr) 80px 90px;gap:6px}
+.sp textarea{grid-column:1/-1;min-height:48px}
+.sp .ac{grid-column:1/-1;display:flex;gap:6px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));column-gap:20px}
+.dice{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+#log{font-size:14px;margin-top:8px}
+#log div{padding:3px 0;border-bottom:1px dashed var(--bd)}
+#log div:first-child{font-weight:bold;color:var(--ac)}
+#io{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Ficha de Personagem</h1>
+<div class="bar">
+<button id="novo" class="g">Nova ficha</button>
+<button id="exp" class="g">Exportar</button>
+<button id="imp" class="g">Importar</button>
+</div>
+<section id="io">
+<label>Cole ou copie o código da ficha</label>
+<textarea id="iot"></textarea>
+<div class="bar" style="margin-top:6px"><button id="iook">Carregar ficha</button><button id="iox" class="g">Fechar</button></div>
+</section>
+
+<section><h2>Status</h2>
+<div class="grid">
+<div><label>Nome do personagem</label><input data-f="nome"></div>
+<div><label>Raça</label><select data-f="raca"><option value="">Selecione…</option><option>Humano</option><option>Anão</option><option>Elfo</option><option>Goblin</option><option>Orc</option><option>Tiefling</option></select></div>
+<div><label>Classe</label><select data-f="classe"><option value="">Selecione…</option><option>Mago</option><option>Berserk</option><option>Guerreiro</option><option>Mercenário</option><option>Ladino</option><option>Clérigo</option><option>Atirador</option><option>Paladino</option><option>Bardo</option></select></div>
+<div id="deusBox" style="display:none"><label>Deus servido</label><input data-f="deus"></div>
+<div><label>Nível</label><input data-f="nivel" type="number" min="0"></div>
+<div><label>❤️ Vida (PV)</label><div class="pair"><input data-f="pv" type="number"><span>/</span><input id="pvmax" readonly></div></div>
+<div><label>🧠 Sanidade (SAN)</label><div class="pair"><input data-f="san" type="number"><span>/</span><input id="sanmax" readonly></div></div>
+<div><label>🔷 Mana (PM)</label><div class="pair"><input data-f="mana" type="number"><span>/</span><input id="manamax" readonly></div></div>
+<div><label>Multiplicador PV/SAN</label><input data-f="mult" type="number" placeholder="5"></div>
+</div></section>
+
+<section><h2>Informações</h2>
+<div class="grid">
+<div><label>Idade</label><select data-f="idade"><option value="">Selecione…</option><option>Idoso</option><option>Adulto</option><option>Adolescente</option><option>Criança</option><option>Bebê</option></select></div>
+<div><label>Sexo</label><input data-f="sexo"></div>
+<div><label>Origem</label><input data-f="origem"></div>
+<div><label>Ocupação</label><input data-f="ocup"></div>
+<div><label>Maior medo</label><input data-f="medo"></div>
+</div></section>
+
+<section><h2>Atributos</h2>
+<div class="pool">Total de pontos <input data-f="atTotal" type="number" min="0"> Máx. por atributo <input data-f="atMax" type="number" min="0"> Gastos: <b id="atGasto">0</b> Disponíveis: <b id="atDisp">0</b></div>
+<div id="attrs" class="cols"></div></section>
+
+<section><h2>Perícias</h2>
+<div class="pool">Total de pontos <input data-f="skTotal" type="number" min="0"> Máx. por perícia <input data-f="skMax" type="number" min="0"> Gastos: <b id="skGasto">0</b> Disponíveis: <b id="skDisp">0</b></div>
+<div id="skills" class="cols"></div></section>
+
+<section><h2>Rolador de dados</h2>
+<div class="dice">
+<div><label>Quantidade</label><input id="dq" type="number" min="1" value="1"></div>
+<div><label>Dado</label><select id="dd"><option>4</option><option>6</option><option>8</option><option>10</option><option>12</option><option selected>20</option><option>100</option></select></div>
+<div><label>Bônus</label><input id="db" type="number" value="0"></div>
+</div>
+<button id="roll">Rolar</button>
+<span style="font-size:12px;color:var(--mu)"> Use o 🎲 ao lado de cada atributo ou perícia. Perícia rola 1d20 + perícia + atributo escolhido.</span>
+<div id="log"></div></section>
+
+<section><h2>Magias</h2>
+<div id="spells"></div>
+<button id="addSp" class="g">+ Adicionar magia</button></section>
+
+<section><h2>Habilidades</h2>
+<label>Habilidades raciais</label><textarea data-f="hRacial"></textarea>
+<label>Habilidades de classe</label><textarea data-f="hClasse"></textarea>
+<label>Habilidades adquiridas</label><textarea data-f="hAdq"></textarea></section>
+
+<section><h2>Inventário</h2>
+<div class="grid">
+<div><label>Arma principal</label><input data-f="armaP"></div>
+<div><label>Arma secundária</label><input data-f="armaS"></div>
+<div><label>Armadura</label><input data-f="armadura"></div>
+<div><label>Dinheiro</label><input data-f="dinheiro"></div>
+</div>
+<label style="margin-top:8px">Itens</label><textarea data-f="itens"></textarea></section>
+
+<section><h2>História</h2>
+<label>Aparência</label><textarea data-f="aparencia"></textarea>
+<label>Personalidade</label><textarea data-f="personalidade"></textarea>
+<label>História</label><textarea data-f="historia"></textarea>
+<label>Objetivo</label><textarea data-f="objetivo"></textarea>
+<label>Aliados e contatos</label><textarea data-f="aliados"></textarea></section>
+</main>
+<script>
+const ATTR=[["FOR","Força"],["AGI","Agilidade"],["CON","Constituição"],["INT","Inteligência"],["CAR","Carisma"],["SAB","Sabedoria"]];
+const SK=["Atletismo","Artes","Adestramento","Conhecimento","Culinária","Diplomacia","Enganação","Fortitude","Furtividade","Intimidação","Investigação","Intuição","Iniciativa","Luta","Ladinagem","Medicina","Ofício","Percepção","Pontaria","Pilotagem","Reflexos","Religião","Sobrevivência","Vontade"];
+const KEY="ficha-rpg-v1";
+const _h={Idoso:25,Adulto:50,Adolescente:35,"Criança":25,"Bebê":10},_g={Idoso:45,Adulto:70,Adolescente:55,"Criança":35,"Bebê":10};
+const PVR={Humano:_h,"Anão":_g,Goblin:_h,Orc:_g,Tiefling:_g,Elfo:{Adulto:35,Adolescente:30,"Criança":5}};
+function base(){const t=PVR[S.f.raca];return t&&t[S.f.idade]!=null?t[S.f.idade]:null}
+const CL={Mago:{hp:10,mg:50,sk:["Conhecimento","Vontade"]},Berserk:{hp:25,mg:5,sk:["Luta","Atletismo"]},Guerreiro:{hp:25,mg:5,sk:["Fortitude","Reflexos"]},"Mercenário":{hp:25,mg:5,sk:["Conhecimento","Investigação"]},Ladino:{hp:15,mg:10,sk:["Furtividade","Ladinagem"]},"Clérigo":{hp:10,mg:30,sk:["Religião","Medicina"]},Atirador:{hp:20,mg:5,sk:["Pontaria","Percepção"]},Paladino:{hp:25,mg:30,sk:["Fortitude","Religião"]},Bardo:{hp:15,mg:15,sk:["Artes","Diplomacia"]}};
+function cls(){return CL[S.f.classe]||{hp:0,mg:0,sk:[]}}
+function manaMax(){return (S.f.raca==="Humano"?5:0)+cls().mg}
+function bonus(k){return cls().sk.includes(k)?5:0}
+function ui(){const el=document.querySelector('[data-f="idade"]'),l=S.f.raca==="Elfo"?["Adulto","Adolescente","Criança"]:["Idoso","Adulto","Adolescente","Criança","Bebê"];
+ if(el.dataset.l!==l.join()){el.dataset.l=l.join();el.innerHTML=`<option value="">Selecione…</option>`+l.map(x=>`<option>${x}</option>`).join("");if(!l.includes(S.f.idade))S.f.idade="";el.value=S.f.idade||""}
+ $("deusBox").style.display=S.f.classe==="Clérigo"?"block":"none"}
+const DEF={Atletismo:"FOR",Artes:"CAR",Adestramento:"CAR",Conhecimento:"INT",Culinária:"SAB",Diplomacia:"CAR",Enganação:"CAR",Fortitude:"CON",Furtividade:"AGI",Intimidação:"CAR",Investigação:"INT",Intuição:"SAB",Iniciativa:"AGI",Luta:"FOR",Ladinagem:"AGI",Medicina:"INT",Ofício:"INT",Percepção:"SAB",Pontaria:"AGI",Pilotagem:"AGI",Reflexos:"AGI",Religião:"SAB",Sobrevivência:"SAB",Vontade:"SAB"};
+let S={f:{},a:{},s:{}};
+const $=id=>document.getElementById(id);
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.f)S=Object.assign({f:{},a:{},s:{}},o)}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function sum(o){return Object.values(o).reduce((x,y)=>x+(+y||0),0)}
+function totals(){
+ const ag=sum(S.a),sg=sum(S.s);
+ $("atGasto").textContent=ag;$("skGasto").textContent=sg;
+ $("atDisp").textContent=(+S.f.atTotal||0)-ag;$("skDisp").textContent=(+S.f.skTotal||0)-sg;
+ $("pvmax").value=pvMax();$("manamax").value=manaMax();$("sanmax").value=(+S.a.SAB||0)*(+S.f.mult||5);
+}
+function list(id,items,store){
+ $(id).innerHTML=items.map(it=>{const at=Array.isArray(it),n=at?it[1]:it,k=at?it[0]:it;
+ const sel=at?"<span></span>":`<select data-b="${k}">${ATTR.map(a=>`<option${(S.b[k]||DEF[k])===a[0]?" selected":""}>${a[0]}</option>`).join("")}</select>`;
+ return `<div class="row"><span class="n">${n}${at?` <small>${k}</small>`:""}${!at&&bonus(k)?` <small style="color:var(--ac)">+${bonus(k)}</small>`:""}</span>${sel}<button class="g" data-roll="${k}" data-st="${store}" data-n="${n}" title="Rolar">🎲</button><button class="g" data-s="${store}" data-k="${k}" data-d="-1">−</button><span class="v" id="v-${store}-${k}">${(S[store][k]||0)+(store==="s"?bonus(k):0)}</span><button class="g" data-s="${store}" data-k="${k}" data-d="1">+</button></div>`}).join("");
+}
+function fillInputs(){document.querySelectorAll("[data-f]").forEach(e=>{e.value=S.f[e.dataset.f]??""})}
+function build(){S.b=S.b||{};S.m=S.m||[];spells();list("attrs",ATTR,"a");list("skills",SK,"s");ui();fillInputs();totals()}
+document.addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.f;if(k){S.f[k]=e.target.value;if(k==="raca"||k==="idade"||k==="classe"){ui();if(k==="classe")list("skills",SK,"s");humano()}save();totals()}});
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button[data-s]");
+ if(b){const s=b.dataset.s,k=b.dataset.k;const lim=+S.f[s==="a"?"atMax":"skMax"]||Infinity;S[s][k]=Math.min(lim,Math.max(0,(+S[s][k]||0)+ +b.dataset.d));$(`v-${s}-${k}`).textContent=S[s][k]+(s==="s"?bonus(k):0);save();totals();return}
+ const r=e.target.closest("[data-roll]");
+ if(r){const k=r.dataset.roll;
+  if(r.dataset.st==="a")rollDice(1,20,+S.a[k]||0,r.dataset.n);
+  else{const at=S.b[k]||DEF[k]||"FOR";rollDice(1,20,(+S.s[k]||0)+bonus(k)+(+S.a[at]||0),`${k} (${at})`)}}
+});
+function rollDice(q,d,m,label){
+ const rs=[];for(let i=0;i<q;i++)rs.push(1+Math.floor(Math.random()*d));
+ const t=rs.reduce((x,y)=>x+y,0)+m;
+ const txt=`${label?label+": ":""}${q}d${d} [${rs.join(", ")}]${m?(m>0?" + ":" − ")+Math.abs(m):""} = ${t}`;
+ const div=document.createElement("div");div.textContent=txt;$("log").prepend(div);
+ while($("log").children.length>8)$("log").lastChild.remove();
+}
+function rollExpr(s){s=String(s||"").trim();if(!s)return "";
+ const re=/([+-]?)\s*(?:(\d*)d(\d+)|(\d+))/gi;let m,tot=0,parts=[],ok=false;
+ while((m=re.exec(s))){ok=true;const sg=m[1]==="-"?-1:1;
+  if(m[3]){const q=+m[2]||1,d=+m[3],rs=[];for(let i=0;i<q;i++)rs.push(1+Math.floor(Math.random()*d));tot+=sg*rs.reduce((x,y)=>x+y,0);parts.push(`${sg<0?"−":""}${q}d${d} [${rs.join(", ")}]`)}
+  else{tot+=sg*+m[4];parts.push(`${sg<0?"−":"+"}${m[4]}`)}}
+ return ok?` · Dano: ${parts.join(" ")} = ${tot}`:""}
+function pvMax(){return (base()||0)+cls().hp+(+S.a.CON||0)*(+S.f.mult||5)}
+function humano(){if(base()!=null||CL[S.f.classe]){S.f.pv=pvMax();S.f.mana=manaMax();fillInputs()}}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function spells(){$("spells").innerHTML=S.m.map((m,i)=>`<div class="sp"><div><label>Magia</label><input data-m="${i}" data-p="n" value="${esc(m.n)}"></div><div><label>Custo (PM)</label><input data-m="${i}" data-p="c" type="number" min="0" value="${esc(m.c)}"></div><div><label>Dano</label><input data-m="${i}" data-p="dano" placeholder="2d6" value="${esc(m.dano)}"></div><textarea data-m="${i}" data-p="d" placeholder="Descrição / efeito">${esc(m.d)}</textarea><div class="ac"><button data-use="${i}">Usar</button><button class="g" data-del="${i}">Remover</button></div></div>`).join("")}
+document.addEventListener("input",e=>{const i=e.target.dataset&&e.target.dataset.m;if(i!==undefined&&S.m[i]){S.m[i][e.target.dataset.p]=e.target.value;save()}});
+document.addEventListener("click",e=>{const u=e.target.closest("[data-use]"),d=e.target.closest("[data-del]");
+ if(u){const m=S.m[u.dataset.use],c=+m.c||0,cur=+S.f.mana||0,div=document.createElement("div");
+  if(c>cur)div.textContent=`${m.n||"Magia"}: mana insuficiente (${cur}/${c})`;
+  else{S.f.mana=cur-c;save();fillInputs();div.textContent=`${m.n||"Magia"}: −${c} PM (restam ${cur-c})`+rollExpr(m.dano)}
+  $("log").prepend(div);while($("log").children.length>8)$("log").lastChild.remove()}
+ if(d){S.m.splice(+d.dataset.del,1);save();spells()}});
+$("addSp").onclick=()=>{S.m.push({n:"",c:"",d:""});save();spells()};
+document.addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.b;if(k){S.b[k]=e.target.value;save()}});
+$("roll").onclick=()=>rollDice(Math.max(1,+$("dq").value||1),+$("dd").value,+$("db").value||0,"");
+$("novo").onclick=()=>{if(confirm("Apagar esta ficha e começar uma nova?")){S={f:{},a:{},s:{}};save();build()}};
+$("exp").onclick=()=>{$("io").style.display="block";$("iot").value=JSON.stringify(S);$("iot").select();try{navigator.clipboard.writeText($("iot").value)}catch(e){}};
+$("imp").onclick=()=>{$("io").style.display="block";$("iot").value=""};
+$("iox").onclick=()=>{$("io").style.display="none"};
+$("iook").onclick=()=>{try{const o=JSON.parse($("iot").value);if(o&&o.f){S=Object.assign({f:{},a:{},s:{}},o);save();build();$("io").style.display="none"}}catch(e){alert("Código inválido.")}};
+load();build();
+</script>
+</body>
+</html>
